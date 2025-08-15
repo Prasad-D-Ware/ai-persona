@@ -2,6 +2,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import MarkdownRenderer from './markdown-renderer';
 import AudioPlayer from './audio-player';
+import { personaConfig } from '../utils/personas';
+import Image from 'next/image';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -116,9 +118,18 @@ const ChatInterface = ({ persona }: ChatInterfaceProps) => {
       <div className="px-4 md:px-6 py-3 md:py-4 border-b border-gray-100/50 bg-gradient-to-r from-purple-50 to-indigo-50">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2 md:space-x-3">
-            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            <div className="relative w-8 h-8 md:w-10 md:h-10">
+              <Image
+                src={personaConfig[persona as keyof typeof personaConfig]?.avatar || '/next.svg'}
+                alt={personaConfig[persona as keyof typeof personaConfig]?.name || 'Assistant'}
+                width={40}
+                height={40}
+                className="rounded-full object-cover border-2 border-white shadow-sm"
+              />
+              <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 rounded-full border-2 border-white animate-pulse"></div>
+            </div>
             <h3 className="text-xs md:text-sm font-medium text-gray-700">
-              {persona === 'hitesh' ? 'Hitesh Choudhary' : 'Piyush Garg'}
+              {personaConfig[persona as keyof typeof personaConfig]?.name || 'Assistant'}
             </h3>
           </div>
           
@@ -152,7 +163,7 @@ const ChatInterface = ({ persona }: ChatInterfaceProps) => {
               </svg>
             </div>
             <p className="text-gray-500 text-sm font-medium mb-1">
-              Start chatting with {persona === 'hitesh' ? 'Hitesh' : 'Piyush'}
+              Start chatting with {personaConfig[persona as keyof typeof personaConfig]?.name || 'Assistant'}
             </p>
             <p className="text-gray-400 text-xs">Ask anything about coding, tech, or career advice</p>
           </div>
@@ -163,46 +174,72 @@ const ChatInterface = ({ persona }: ChatInterfaceProps) => {
             key={index}
             className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} mb-3 md:mb-4`}
           >
-            <div className="max-w-[85%] md:max-w-[75%]">
-              <div
-                className={`px-3 md:px-4 py-2 md:py-3 rounded-2xl ${
-                  message.role === 'user'
-                    ? 'bg-black text-white shadow-lg shadow-purple-500/25'
-                    : 'bg-gray-50 text-gray-800 border border-gray-100'
-                }`}
-              >
-                {message.role === 'assistant' ? (
-                  <MarkdownRenderer 
-                    content={message.content} 
-                    className="text-sm leading-relaxed"
-                  />
-                ) : (
-                  <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
-                )}
-              </div>
-              
+            <div className={`flex items-start space-x-2 md:space-x-3 max-w-[85%] md:max-w-[75%] ${message.role === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
               {message.role === 'assistant' && (
-                <div className="mt-2 ml-1 md:ml-2">
-                  <AudioPlayer
-                    text={message.content}
-                    persona={persona}
-                    autoPlay={autoPlayEnabled && message.id === latestMessageId}
-                    className="text-xs"
+                <div className="flex-shrink-0 mt-1">
+                  <Image
+                    src={personaConfig[persona as keyof typeof personaConfig]?.avatar || '/next.svg'}
+                    alt={personaConfig[persona as keyof typeof personaConfig]?.name || 'Assistant'}
+                    width={32}
+                    height={32}
+                    className="rounded-full object-cover border border-gray-200"
                   />
                 </div>
               )}
+              
+              <div className="flex-1">
+                <div
+                  className={`px-3 md:px-4 py-2 md:py-3 rounded-2xl ${
+                    message.role === 'user'
+                      ? 'bg-black text-white shadow-lg shadow-purple-500/25'
+                      : 'bg-gray-50 text-gray-800 border border-gray-100'
+                  }`}
+                >
+                  {message.role === 'assistant' ? (
+                    <MarkdownRenderer 
+                      content={message.content} 
+                      className="text-sm leading-relaxed"
+                    />
+                  ) : (
+                    <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
+                  )}
+                </div>
+                
+                {message.role === 'assistant' && (
+                  <div className="mt-2 ml-1 md:ml-2">
+                    <AudioPlayer
+                      text={message.content}
+                      persona={persona}
+                      autoPlay={autoPlayEnabled && message.id === latestMessageId}
+                      className="text-xs"
+                    />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         ))}
         
         {isLoading && (
           <div className="flex justify-start mb-3 md:mb-4">
-            <div className="bg-gray-50 text-gray-800 max-w-[85%] md:max-w-[75%] px-3 md:px-4 py-2 md:py-3 rounded-2xl border border-gray-100">
-              <div className="flex items-center space-x-3">
-                <div className="flex space-x-1">
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+            <div className="flex items-start space-x-2 md:space-x-3 max-w-[85%] md:max-w-[75%]">
+              <div className="flex-shrink-0 mt-1">
+                <Image
+                  src={personaConfig[persona as keyof typeof personaConfig]?.avatar || '/next.svg'}
+                  alt={personaConfig[persona as keyof typeof personaConfig]?.name || 'Assistant'}
+                  width={32}
+                  height={32}
+                  className="rounded-full object-cover border border-gray-200"
+                />
+              </div>
+              
+              <div className="bg-gray-50 text-gray-800 px-3 md:px-4 py-2 md:py-3 rounded-2xl border border-gray-100">
+                <div className="flex items-center space-x-3">
+                  <div className="flex space-x-1">
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                  </div>
                 </div>
               </div>
             </div>

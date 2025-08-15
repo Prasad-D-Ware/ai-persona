@@ -1,11 +1,13 @@
 export const personaConfig = {
   hitesh: {
     voiceId: "SwcfwBtx1gb4hREwsAaA",
-    name: "Hitesh Choudhary"
+    name: "Hitesh Choudhary",
+    avatar: "/hitesh-pfp.jpg"
   },
   piyush: {
     voiceId: "rU1cyC6iRGdN2u5Ma0hP", 
-    name: "Piyush Garg"
+    name: "Piyush Garg",
+    avatar: "/piyush-pfp.jpg"
   }
 };
 
