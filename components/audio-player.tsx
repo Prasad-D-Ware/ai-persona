@@ -71,14 +71,12 @@ const AudioPlayer = ({ text, persona, autoPlay = false, className = '' }: AudioP
     }
   };
 
-  // Auto-play functionality
   useEffect(() => {
     if (autoPlay && !audioUrl && !isLoading) {
       playAudio();
     }
   }, [autoPlay, text, persona]);
 
-  // Handle audio events
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -98,7 +96,6 @@ const AudioPlayer = ({ text, persona, autoPlay = false, className = '' }: AudioP
     };
   }, []);
 
-  // Cleanup audio URL on unmount
   useEffect(() => {
     return () => {
       if (audioUrl) {

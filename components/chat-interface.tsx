@@ -26,7 +26,6 @@ const ChatInterface = ({ persona }: ChatInterfaceProps) => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Load messages from localStorage for current persona
   const loadMessagesFromStorage = (currentPersona: string) => {
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem(`chat-${currentPersona}`);
@@ -35,14 +34,12 @@ const ChatInterface = ({ persona }: ChatInterfaceProps) => {
     return [];
   };
 
-  // Save messages to localStorage for current persona
   const saveMessagesToStorage = (currentPersona: string, messagesToSave: Message[]) => {
     if (typeof window !== 'undefined') {
       localStorage.setItem(`chat-${currentPersona}`, JSON.stringify(messagesToSave));
     }
   };
 
-  // Clear messages when persona changes and load saved messages for new persona
   useEffect(() => {
     const savedMessages = loadMessagesFromStorage(persona);
     setMessages(savedMessages);
@@ -51,7 +48,6 @@ const ChatInterface = ({ persona }: ChatInterfaceProps) => {
     setLatestMessageId(null);
   }, [persona]);
 
-  // Save messages to localStorage whenever messages change
   useEffect(() => {
     if (messages.length > 0) {
       saveMessagesToStorage(persona, messages);
@@ -117,7 +113,6 @@ const ChatInterface = ({ persona }: ChatInterfaceProps) => {
 
   return (
     <div className="w-full max-w-4xl mx-auto mt-5 bg-white/80 backdrop-blur-sm rounded-2xl md:rounded-3xl shadow-xl border border-white/20 overflow-hidden">
-      {/* Chat Header */}
       <div className="px-4 md:px-6 py-3 md:py-4 border-b border-gray-100/50 bg-gradient-to-r from-purple-50 to-indigo-50">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2 md:space-x-3">
@@ -127,7 +122,6 @@ const ChatInterface = ({ persona }: ChatInterfaceProps) => {
             </h3>
           </div>
           
-          {/* Auto-play Toggle */}
           <div className="flex items-center space-x-1 md:space-x-2">
             <span className="text-xs text-gray-600 hidden sm:inline">Auto-play</span>
             <button
@@ -149,7 +143,6 @@ const ChatInterface = ({ persona }: ChatInterfaceProps) => {
         </div>
       </div>
 
-      {/* Messages Area */}
       <div className="h-[400px] md:h-[500px] overflow-y-auto px-3 md:px-4 py-4 md:py-6 space-y-3 md:space-y-4">
         {messages.length === 0 && (
           <div className="flex flex-col items-center justify-center h-full text-center px-4">
@@ -188,7 +181,6 @@ const ChatInterface = ({ persona }: ChatInterfaceProps) => {
                 )}
               </div>
               
-              {/* Audio Player for Assistant Messages */}
               {message.role === 'assistant' && (
                 <div className="mt-2 ml-1 md:ml-2">
                   <AudioPlayer
@@ -219,10 +211,8 @@ const ChatInterface = ({ persona }: ChatInterfaceProps) => {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input Area */}
       <div className="px-3 md:px-4 py-3 md:py-4 border-t border-gray-100/50 bg-gray-50/30">
         <div className="flex items-end space-x-2 md:space-x-3">
-          {/* Text Input */}
           <div className="flex-1 relative">
             <textarea
               value={inputMessage}
@@ -235,7 +225,6 @@ const ChatInterface = ({ persona }: ChatInterfaceProps) => {
             />
           </div>
 
-          {/* Send Button */}
           <button
             onClick={sendMessage}
             disabled={!inputMessage.trim() || isLoading}
