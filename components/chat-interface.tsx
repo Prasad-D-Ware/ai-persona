@@ -55,10 +55,11 @@ const ChatInterface = ({ persona }: ChatInterfaceProps) => {
   }, [persona, currentPersona]);
 
   useEffect(() => {
-    if (messages.length > 0 && currentPersona === persona) {
-      saveMessagesToStorage(currentPersona, messages);
+    if (persona && messages.length === 0 && !isLoading) {
+      const savedMessages = loadMessagesFromStorage(persona);
+      setMessages(savedMessages);
     }
-  }, [messages, currentPersona, persona]);
+  }, [persona]);
 
   useEffect(() => {
     scrollToBottom();
