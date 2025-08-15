@@ -21,6 +21,7 @@ const ChatInterface = ({ persona }: ChatInterfaceProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [autoPlayEnabled, setAutoPlayEnabled] = useState(true);
   const [latestMessageId, setLatestMessageId] = useState<string | null>(null);
+  const [currentPersona, setCurrentPersona] = useState(persona);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -43,18 +44,21 @@ const ChatInterface = ({ persona }: ChatInterfaceProps) => {
   };
 
   useEffect(() => {
-    const savedMessages = loadMessagesFromStorage(persona);
-    setMessages(savedMessages);
-    setInputMessage('');
-    setIsLoading(false);
-    setLatestMessageId(null);
-  }, [persona]);
+    if (persona !== currentPersona) {
+      const savedMessages = loadMessagesFromStorage(persona);
+      setMessages(savedMessages);
+      setInputMessage('');
+      setIsLoading(false);
+      setLatestMessageId(null);
+      setCurrentPersona(persona);
+    }
+  }, [persona, currentPersona]);
 
   useEffect(() => {
-    if (messages.length > 0) {
-      saveMessagesToStorage(persona, messages);
+    if (messages.length > 0 && currentPersona === persona) {
+      saveMessagesToStorage(currentPersona, messages);
     }
-  }, [messages, persona]);
+  }, [messages, currentPersona, persona]);
 
   useEffect(() => {
     scrollToBottom();
@@ -76,7 +80,7 @@ const ChatInterface = ({ persona }: ChatInterfaceProps) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          persona,
+          persona: currentPersona,
           messages: updatedMessages,
         }),
       });
@@ -113,6 +117,14 @@ const ChatInterface = ({ persona }: ChatInterfaceProps) => {
     }
   };
 
+  const clearChat = () => {
+    setMessages([]);
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(`chat-${currentPersona}`);
+    }
+    setLatestMessageId(null);
+  };
+
   return (
     <div className="w-full max-w-4xl mx-auto mt-5 bg-white/80 backdrop-blur-sm rounded-2xl md:rounded-3xl shadow-xl border border-white/20 overflow-hidden">
       <div className="px-4 md:px-6 py-3 md:py-4 border-b border-gray-100/50 bg-gradient-to-r from-purple-50 to-indigo-50">
@@ -133,23 +145,42 @@ const ChatInterface = ({ persona }: ChatInterfaceProps) => {
             </h3>
           </div>
           
-          <div className="flex items-center space-x-1 md:space-x-2">
-            <span className="text-xs text-gray-600 hidden sm:inline">Auto-play</span>
+          <div className="flex items-center space-x-1 md:space-x-3">
             <button
-              onClick={() => setAutoPlayEnabled(!autoPlayEnabled)}
-              className={`relative inline-flex h-6 w-11 md:h-5 md:w-9 items-center rounded-full transition-colors touch-manipulation ${
-                autoPlayEnabled ? 'bg-purple-500' : 'bg-gray-300'
-              }`}
-              aria-label={`Auto-play ${autoPlayEnabled ? 'enabled' : 'disabled'}`}
+              onClick={clearChat}
+              className="p-1.5 md:p-2 text-gray-500 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all duration-200 group"
+              aria-label="Clear chat history"
+              title="Clear chat history"
             >
-              <span
-                className={`inline-block h-4 w-4 md:h-3 md:w-3 transform rounded-full bg-white transition-transform shadow-sm ${
-                  autoPlayEnabled 
-                    ? 'translate-x-5 md:translate-x-5' 
-                    : 'translate-x-0.5 md:translate-x-1'
-                }`}
-              />
+              <svg 
+                className="h-4 w-4 md:h-5 md:w-5" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+              </svg>
             </button>
+            
+            <div className="flex items-center space-x-1 md:space-x-2">
+              <span className="text-xs text-gray-600 hidden sm:inline">Auto-play</span>
+              <button
+                onClick={() => setAutoPlayEnabled(!autoPlayEnabled)}
+                className={`relative inline-flex h-6 w-11 md:h-5 md:w-9 items-center rounded-full transition-colors touch-manipulation ${
+                  autoPlayEnabled ? 'bg-purple-500' : 'bg-gray-300'
+                }`}
+                aria-label={`Auto-play ${autoPlayEnabled ? 'enabled' : 'disabled'}`}
+              >
+                <span
+                  className={`inline-block h-4 w-4 md:h-3 md:w-3 transform rounded-full bg-white transition-transform shadow-sm ${
+                    autoPlayEnabled 
+                      ? 'translate-x-5 md:translate-x-5' 
+                      : 'translate-x-0.5 md:translate-x-1'
+                  }`}
+                />
+              </button>
+            </div>
           </div>
         </div>
       </div>

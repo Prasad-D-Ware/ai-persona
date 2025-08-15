@@ -50,9 +50,24 @@ const AudioPlayer = ({ text, persona, autoPlay = false, className = '' }: AudioP
   const playAudio = async () => {
     const url = await generateAudio();
     if (url && audioRef.current) {
-      audioRef.current.src = url;
-      audioRef.current.play();
-      setIsPlaying(true);
+      try {
+        // Pause any current playback first
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+        
+        // Set the new source
+        audioRef.current.src = url;
+        
+        // Wait for the audio to be ready and then play
+        const playPromise = audioRef.current.play();
+        if (playPromise !== undefined) {
+          await playPromise;
+          setIsPlaying(true);
+        }
+      } catch (error) {
+        console.log('Audio play interrupted or failed:', error);
+        setIsPlaying(false);
+      }
     }
   };
 
@@ -72,10 +87,26 @@ const AudioPlayer = ({ text, persona, autoPlay = false, className = '' }: AudioP
   };
 
   useEffect(() => {
-    if (autoPlay && !audioUrl && !isLoading) {
+    // Reset audio state when text or persona changes
+    if (audioRef.current) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    }
+    setAudioUrl(null);
+    setError(null);
+    
+    // Trigger autoplay for new content
+    if (autoPlay && !isLoading) {
       playAudio();
     }
-  }, [autoPlay, text, persona]);
+  }, [text, persona]);
+
+  useEffect(() => {
+    // Handle autoPlay changes separately to avoid unnecessary resets
+    if (autoPlay && audioUrl && !isPlaying && !isLoading) {
+      playAudio();
+    }
+  }, [autoPlay]);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -103,6 +134,16 @@ const AudioPlayer = ({ text, persona, autoPlay = false, className = '' }: AudioP
       }
     };
   }, [audioUrl]);
+
+  // Cleanup on component unmount
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = '';
+      }
+    };
+  }, []);
 
   if (error) {
     return (
