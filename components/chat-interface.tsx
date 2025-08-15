@@ -116,29 +116,32 @@ const ChatInterface = ({ persona }: ChatInterfaceProps) => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto mt-5 bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 overflow-hidden">
+    <div className="w-full max-w-4xl mx-auto mt-5 bg-white/80 backdrop-blur-sm rounded-2xl md:rounded-3xl shadow-xl border border-white/20 overflow-hidden">
       {/* Chat Header */}
-      <div className="px-6 py-4 border-b border-gray-100/50 bg-gradient-to-r from-purple-50 to-indigo-50">
+      <div className="px-4 md:px-6 py-3 md:py-4 border-b border-gray-100/50 bg-gradient-to-r from-purple-50 to-indigo-50">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2 md:space-x-3">
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            <h3 className="text-sm font-medium text-gray-700">
+            <h3 className="text-xs md:text-sm font-medium text-gray-700">
               {persona === 'hitesh' ? 'Hitesh Choudhary' : 'Piyush Garg'}
             </h3>
           </div>
           
           {/* Auto-play Toggle */}
-          <div className="flex items-center space-x-2">
-            <span className="text-xs text-gray-600">Auto-play</span>
+          <div className="flex items-center space-x-1 md:space-x-2">
+            <span className="text-xs text-gray-600 hidden sm:inline">Auto-play</span>
             <button
               onClick={() => setAutoPlayEnabled(!autoPlayEnabled)}
-              className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${
+              className={`relative inline-flex h-6 w-11 md:h-5 md:w-9 items-center rounded-full transition-colors touch-manipulation ${
                 autoPlayEnabled ? 'bg-purple-500' : 'bg-gray-300'
               }`}
+              aria-label={`Auto-play ${autoPlayEnabled ? 'enabled' : 'disabled'}`}
             >
               <span
-                className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform ${
-                  autoPlayEnabled ? 'translate-x-5' : 'translate-x-1'
+                className={`inline-block h-4 w-4 md:h-3 md:w-3 transform rounded-full bg-white transition-transform shadow-sm ${
+                  autoPlayEnabled 
+                    ? 'translate-x-5 md:translate-x-5' 
+                    : 'translate-x-0.5 md:translate-x-1'
                 }`}
               />
             </button>
@@ -147,11 +150,11 @@ const ChatInterface = ({ persona }: ChatInterfaceProps) => {
       </div>
 
       {/* Messages Area */}
-      <div className="h-[500px] overflow-y-auto px-4 py-6 space-y-4">
+      <div className="h-[400px] md:h-[500px] overflow-y-auto px-3 md:px-4 py-4 md:py-6 space-y-3 md:space-y-4">
         {messages.length === 0 && (
-          <div className="flex flex-col items-center justify-center h-full text-center">
-            <div className="w-16 h-16 bg-gradient-to-br from-purple-100 to-indigo-100 rounded-full flex items-center justify-center mb-4">
-              <svg className="w-8 h-8 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="flex flex-col items-center justify-center h-full text-center px-4">
+            <div className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-br from-purple-100 to-indigo-100 rounded-full flex items-center justify-center mb-3 md:mb-4">
+              <svg className="w-6 h-6 md:w-8 md:h-8 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
               </svg>
             </div>
@@ -165,11 +168,11 @@ const ChatInterface = ({ persona }: ChatInterfaceProps) => {
         {messages.map((message, index) => (
           <div
             key={index}
-            className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} mb-4`}
+            className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} mb-3 md:mb-4`}
           >
-            <div className="max-w-[75%]">
+            <div className="max-w-[85%] md:max-w-[75%]">
               <div
-                className={`px-4 py-3 rounded-2xl ${
+                className={`px-3 md:px-4 py-2 md:py-3 rounded-2xl ${
                   message.role === 'user'
                     ? 'bg-black text-white shadow-lg shadow-purple-500/25'
                     : 'bg-gray-50 text-gray-800 border border-gray-100'
@@ -187,7 +190,7 @@ const ChatInterface = ({ persona }: ChatInterfaceProps) => {
               
               {/* Audio Player for Assistant Messages */}
               {message.role === 'assistant' && (
-                <div className="mt-2 ml-2">
+                <div className="mt-2 ml-1 md:ml-2">
                   <AudioPlayer
                     text={message.content}
                     persona={persona}
@@ -201,8 +204,8 @@ const ChatInterface = ({ persona }: ChatInterfaceProps) => {
         ))}
         
         {isLoading && (
-          <div className="flex justify-start mb-4">
-            <div className="bg-gray-50 text-gray-800 max-w-[75%] px-4 py-3 rounded-2xl border border-gray-100">
+          <div className="flex justify-start mb-3 md:mb-4">
+            <div className="bg-gray-50 text-gray-800 max-w-[85%] md:max-w-[75%] px-3 md:px-4 py-2 md:py-3 rounded-2xl border border-gray-100">
               <div className="flex items-center space-x-3">
                 <div className="flex space-x-1">
                   <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
@@ -217,8 +220,8 @@ const ChatInterface = ({ persona }: ChatInterfaceProps) => {
       </div>
 
       {/* Input Area */}
-      <div className="px-4 py-4 border-t border-gray-100/50 bg-gray-50/30">
-        <div className="flex items-end space-x-3">
+      <div className="px-3 md:px-4 py-3 md:py-4 border-t border-gray-100/50 bg-gray-50/30">
+        <div className="flex items-end space-x-2 md:space-x-3">
           {/* Text Input */}
           <div className="flex-1 relative">
             <textarea
@@ -226,7 +229,7 @@ const ChatInterface = ({ persona }: ChatInterfaceProps) => {
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Type your message..."
-              className="w-full px-4 py-3 bg-white border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:border-transparent resize-none text-sm placeholder:text-gray-400 shadow-sm"
+              className="w-full px-3 md:px-4 py-2.5 md:py-3 bg-white border border-gray-200 rounded-xl md:rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:border-transparent resize-none text-sm placeholder:text-gray-400 shadow-sm min-h-[44px]"
               rows={1}
               disabled={isLoading}
             />
@@ -236,11 +239,11 @@ const ChatInterface = ({ persona }: ChatInterfaceProps) => {
           <button
             onClick={sendMessage}
             disabled={!inputMessage.trim() || isLoading}
-            className="p-3 bg-black text-white rounded-2xl hover:from-purple-600 hover:to-indigo-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 disabled:shadow-none"
+            className="p-2.5 md:p-3 bg-black text-white rounded-xl md:rounded-2xl hover:from-purple-600 hover:to-indigo-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 disabled:shadow-none min-w-[44px] min-h-[44px] flex items-center justify-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
+              className="h-4 w-4 md:h-5 md:w-5"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"

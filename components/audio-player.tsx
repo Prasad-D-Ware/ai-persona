@@ -125,23 +125,23 @@ const AudioPlayer = ({ text, persona, autoPlay = false, className = '' }: AudioP
       <button
         onClick={togglePlayback}
         disabled={isLoading}
-        className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="flex items-center justify-center w-8 h-8 md:w-8 md:h-8 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
         title={isPlaying ? 'Pause' : 'Play'}
       >
         {isLoading ? (
           <div className="w-3 h-3 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
         ) : isPlaying ? (
-          <svg className="w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
+          <svg className="w-3 h-3 md:w-4 md:h-4 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
             <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
           </svg>
         ) : (
-          <svg className="w-4 h-4 text-gray-600 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+          <svg className="w-3 h-3 md:w-4 md:h-4 text-gray-600 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
             <path d="M8 5v14l11-7z" />
           </svg>
         )}
       </button>
 
-      <span className="text-xs text-gray-500">
+      <span className="text-xs text-gray-500 hidden sm:inline">
         {isLoading ? 'Generating...' : isPlaying ? 'Playing' : 'Play audio'}
       </span>
     </div>

@@ -14,6 +14,26 @@
   font-family: var(--font-afacad), sans-serif;
 }
 
+/* Mobile responsive improvements */
+@media (max-width: 640px) {
+  /* Improve touch targets */
+  button, a, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Better text sizing on mobile */
+  .markdown-content {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  
+  /* Prevent horizontal scroll on small screens */
+  body {
+    overflow-x: hidden;
+  }
+}
+
 /* Markdown content styling */
 .markdown-content h1,
 .markdown-content h2,
