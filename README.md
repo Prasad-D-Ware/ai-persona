@@ -2,6 +2,21 @@
 
 An interactive chat application that simulates conversations with popular tech educators and content creators. Users can chat with AI personas that embody the teaching style, personality, and expertise of well-known figures in the programming community.
 
+## 📸 Screenshots
+
+<div align="center">
+
+### Main Page - Persona Selection
+<img src="public/mainpage-readme.png" alt="AI Persona Simulator Main Page" width="800"/>
+
+### Chat Interface - Hitesh Choudhary Persona
+<img src="public/hitesh-readme.png" alt="Chat with Hitesh Choudhary" width="800"/>
+
+### Chat Interface - Piyush Garg Persona
+<img src="public/piyush-readme.png" alt="Chat with Piyush Garg" width="800"/>
+
+</div>
+
 ## ✨ Features
 
 - **Interactive Chat Interface**: Real-time conversation with AI personas
